@@ -36,7 +36,10 @@ export default function ExistingNoteAlert({ open, handleClose }) {
                 <Divider sx={{ background: "white" }} />
 
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-slide-description">
+                    <DialogContentText
+                        id="alert-dialog-slide-description"
+                        sx={{ textAlign: "center" }}
+                    >
                         You've already added this task. Please enter a new one
                         to avoid duplication.
                     </DialogContentText>

@@ -36,9 +36,11 @@ export default function EmptyInputAlert({ open, handleClose }) {
                 <Divider sx={{ background: "white" }} />
 
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-slide-description">
-                        Please type something before adding a task. apps are
-                        running.
+                    <DialogContentText
+                        id="alert-dialog-slide-description"
+                        sx={{ textAlign: "center" }}
+                    >
+                        Please type something before adding a task.
                     </DialogContentText>
                 </DialogContent>
             </Dialog>

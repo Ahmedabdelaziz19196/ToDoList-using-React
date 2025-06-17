@@ -90,6 +90,8 @@
     height: 40px;
     border-radius: 5px !important;
     border: none !important;
+    position: relative;
+    z-index: 1 !important;
 }
 .ToDo-button:hover {
     background-color: #1976d2;
@@ -117,4 +119,37 @@ h4,
 h5,
 h6 {
     margin: 0;
+}
+
+.card-animation {
+    position: relative;
+    overflow: hidden;
+    background-color: #17191b;
+    color: white;
+}
+
+.card-animation::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background-color: #4caf50;
+    z-index: 0;
+    border-radius: inherit;
+    transition: all 0.5s ease-in-out;
+}
+
+.card-animation[data-done="true"]::before {
+    left: 0;
+    width: 100%;
+}
+
+.card-animation[data-done="false"]::before {
+    left: 0;
+    width: 0%;
+}
+
+.card-animation > * {
+    position: relative;
+    z-index: 1;
 }

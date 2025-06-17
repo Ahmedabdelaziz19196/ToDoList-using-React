@@ -2,6 +2,7 @@
 // import CardContent from "@mui/material/CardContent";
 // import Typography from "@mui/material/Typography";
 // import Card from "@mui/material/Card";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 import ModeEditRoundedIcon from "@mui/icons-material/ModeEditRounded";
@@ -12,12 +13,42 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import EditToDo from "./EditToDo";
+import DeleteAlert from "./DeleteAlert";
 
-export default function TheDoTo({ title, details }) {
+export default function TheDoTo({ toDo, handleDeleteClick, handleDoneClick }) {
+    const [openEditForm, setOpenEditForm] = useState(false);
+    const [openDeleteForm, setOpenDeleteForm] = useState(false);
+
+    /*handle Delete Button*/
+    function handleDelete() {
+        setOpenDeleteForm(true);
+    }
+    function handleCloseDeleteClick() {
+        setOpenDeleteForm(false);
+    }
+    /*handle Delete Button*/
+
+    /*handle Edit Form*/
+    function handleOpenEditClick() {
+        setOpenEditForm(true);
+    }
+    function handleCloseEditClick() {
+        setOpenEditForm(false);
+    }
+    /*handle Edit Form*/
+
+    /* handle Done Click*/
+    function handleDone() {
+        handleDoneClick(toDo.id);
+    }
+    /* handle Done Click*/
+
     return (
         <div>
             <Card
-                className="the-card"
+                className="card-animation the-card"
+                data-done={toDo.isCompleted}
                 variant="outlined"
                 sx={{
                     minWidth: 275,
@@ -25,6 +56,10 @@ export default function TheDoTo({ title, details }) {
                     color: "white ",
                     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.5)",
                     textAlign: "left",
+                    position: "relative",
+                    overflow: "hidden",
+                    border: toDo.isCompleted ? "#4caf50" : "transparent",
+                    borderRadius: toDo.isCompleted ? "0px" : "transparent",
                 }}
             >
                 <Box sx={{ p: 2 }}>
@@ -35,26 +70,47 @@ export default function TheDoTo({ title, details }) {
                             alignItems: "center",
                         }}
                     >
-                        <Typography gutterBottom variant="h5" component="div">
-                            <h4>{title}</h4>
+                        <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="div"
+                            className="done-content"
+                        >
+                            <h4 style={{ textTransform: "capitalize" }}>
+                                {toDo.title}
+                            </h4>
                         </Typography>
                     </Stack>
-                    <Typography variant="body2">{details}</Typography>
+                    <Typography
+                        variant="body2"
+                        sx={{ textTransform: "capitalize" }}
+                        className="done-content"
+                    >
+                        {toDo.details}
+                    </Typography>
                 </Box>
-                <Divider sx={{ background: "white" }} />
+                <Divider
+                    sx={{ background: "white" }}
+                    className="done-content"
+                />
                 <Box sx={{ p: 1, display: "flex", justifyContent: "right" }}>
                     <Stack direction="row" spacing={1}>
+                        {/* Delete button */}
                         <Button
-                            className="ToDo-button"
+                            className="ToDo-button "
                             variant="text"
                             sx={{
                                 borderRadius: "50%",
                                 border: "2px solid #1976d2",
                                 color: "white",
                             }}
+                            onClick={handleDelete}
                         >
                             <DeleteForeverRoundedIcon />
                         </Button>
+                        {/* Delete button */}
+
+                        {/* Edit  button */}
                         <Button
                             variant="text"
                             className="ToDo-button"
@@ -63,9 +119,13 @@ export default function TheDoTo({ title, details }) {
                                 border: "2px solid #1976d2",
                                 color: "white",
                             }}
+                            onClick={handleOpenEditClick}
                         >
                             <ModeEditRoundedIcon />
                         </Button>
+                        {/* Edit  button */}
+
+                        {/* Done  button */}
                         <Button
                             variant="text"
                             className="ToDo-button"
@@ -74,71 +134,24 @@ export default function TheDoTo({ title, details }) {
                                 border: "2px solid #1976d2",
                                 color: "white",
                             }}
+                            onClick={handleDone}
                         >
                             <DoneRoundedIcon />
                         </Button>
+                        {/* Done  button */}
                     </Stack>
                 </Box>
+                <EditToDo
+                    open={openEditForm}
+                    handleClose={handleCloseEditClick}
+                    theDate={toDo}
+                />
+                <DeleteAlert
+                    open={openDeleteForm}
+                    handleClose={handleCloseDeleteClick}
+                    theDate={toDo}
+                />
             </Card>
         </div>
     );
 }
-/*
-<Grid container spacing={2}>
-    <Grid
-        size={4}
-        sx={{
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-        }}
-    >
-        <Button
-            className="ToDo-button"
-            variant="text"
-            sx={{
-                background: "white",
-                borderRadius: "50%",
-                border: "2px solid rgb(148, 73, 71)",
-                color: "rgb(148, 73, 71)",
-            }}
-        >
-            <DeleteForeverRoundedIcon />
-        </Button>
-        <Button
-            variant="text"
-            className="ToDo-button"
-            sx={{
-                background: "white",
-                borderRadius: "50%",
-                border: "2px solid rgb(70, 108, 151)",
-                color: "rgb(70, 108, 151)",
-            }}
-        >
-            <ModeEditRoundedIcon />
-        </Button>
-        <Button
-            variant="text"
-            className="ToDo-button"
-            sx={{
-                background: "white",
-                borderRadius: "50%",
-                border: "2px solid rgba(83, 141, 71, 0.57)",
-                color: "green",
-            }}
-        >
-            <DoneRoundedIcon />
-        </Button>
-    </Grid>
-    <Grid size={8}>
-        <CardContent style={{ textAlign: "right" }}>
-            <Typography variant="h4" component="div">
-                my first to do
-            </Typography>
-            <Typography variant="h6" component="div">
-                details
-            </Typography>
-        </CardContent>
-    </Grid>
-</Grid>;
-*/

@@ -16,6 +16,10 @@ import { useState } from "react";
 import EmptyInputAlert from "./EmptyInputAlert";
 import ExistingNoteAlert from "./ExistingNoteAlert";
 
+/*Context*/
+import { UpdateContext } from "../Context files/UpdateContext";
+import { DeleteContext } from "../Context files/DeleteContext";
+
 export default function ToDoList() {
     let [openEmptyAlert, setOpenEmptyAlert] = useState(false);
     let [openExistingAlert, setOpenExistingAlert] = useState(false);
@@ -30,9 +34,15 @@ export default function ToDoList() {
     ]);
     let showDate = theData.map((data) => {
         return (
-            <TheDoTo key={data.id} title={data.title} details={data.details} />
+            <TheDoTo
+                key={data.id}
+                toDo={data}
+                handleDeleteClick={handleDeleteClick}
+                handleDoneClick={handleDoneClick}
+            />
         );
     });
+
     /*Empty alert*/
     function handleCloseAlert() {
         setOpenEmptyAlert(false);
@@ -79,101 +89,163 @@ export default function ToDoList() {
     }
     /*handle the Add click*/
 
+    /*handle Delete Button*/
+    function handleDeleteClick(id) {
+        let filteredDate = theData.filter((ele) => {
+            return ele.id !== id;
+        });
+        setTheDate(filteredDate);
+    }
+    /*handle Delete Button*/
+
+    /*handle  Update The Date*/
+    function updateTheToDo(id, theUpdate, theDetails) {
+        let updatedData = theData.map((ele) => {
+            return ele.id === id
+                ? { ...ele, title: theUpdate, details: theDetails }
+                : ele;
+        });
+        setTheDate(updatedData);
+    }
+    /*handle  Update The Date*/
+
+    /*handle Done the To-Do*/
+    function handleDoneClick(id) {
+        let doneTheToDo = theData.map((ele) => {
+            return ele.id === id
+                ? { ...ele, isCompleted: !ele.isCompleted }
+                : ele;
+        });
+        setTheDate(doneTheToDo);
+    }
+    /*handle Done the To-Do*/
+
     return (
         <div>
-            <CssBaseline />
-            <Container maxWidth="sm" className="the-main-container">
-                <Box
-                    sx={{
-                        bgcolor: "white",
-                        minHeight: "100vh",
-                        padding: "20px",
-                        position: "relative",
+            <DeleteContext.Provider
+                value={{
+                    handleDeleteClick,
+                }}
+            >
+                <UpdateContext.Provider
+                    value={{
+                        updateTheToDo,
                     }}
                 >
-                    <h1 style={{ fontSize: "50px", margin: "0" }}>
-                        My To-Do List
-                    </h1>
-                    <Divider
-                        variant="middle"
-                        style={{ position: "relative", bottom: "14px" }}
-                    />
-                    <Grid
-                        container
-                        spacing={2}
-                        sx={{
-                            marginBottom: "20px",
-                        }}
-                    >
-                        <Grid size={8}>
-                            <TextField
-                                sx={{
-                                    width: "100% !important",
-                                    height: "100%",
-                                }}
-                                id="filled-basic"
-                                label="Add Your ToDo"
-                                variant="filled"
-                                value={toDoInput}
-                                onChange={handleToDoInput}
+                    <CssBaseline />
+                    <Container maxWidth="sm" className="the-main-container">
+                        <Box
+                            sx={{
+                                bgcolor: "white",
+                                minHeight: "100vh",
+                                padding: "20px",
+                                position: "relative",
+                            }}
+                        >
+                            <h1 style={{ fontSize: "50px", margin: "0" }}>
+                                My To-Do List
+                            </h1>
+                            <Divider
+                                variant="middle"
+                                style={{ position: "relative", bottom: "14px" }}
                             />
-                        </Grid>
-                        <Grid
-                            size={4}
-                            sx={{ display: "flex", alignItems: "center" }}
-                        >
-                            <Button
-                                variant="contained"
+                            <Grid
+                                container
+                                spacing={2}
                                 sx={{
-                                    width: "100% !important",
-                                    height: "100%",
+                                    marginBottom: "20px",
                                 }}
-                                onClick={handleAddClick}
                             >
-                                Add Task
-                            </Button>
-                        </Grid>
-                    </Grid>
-                    <ToggleButtonGroup
-                        // value={alignment}
-                        exclusive
-                        // onChange={handleAlignment}
-                        aria-label="text alignment"
-                        sx={{ marginBottom: "20px" }}
-                    >
-                        <ToggleButton
-                            value="left"
-                            aria-label="left aligned"
-                            sx={{ fontWeight: "bold", color: "#17191b" }}
-                        >
-                            All
-                        </ToggleButton>
-                        <ToggleButton
-                            value="center"
-                            aria-label="centered"
-                            sx={{ fontWeight: "bold", color: "#17191b" }}
-                        >
-                            Completed
-                        </ToggleButton>
-                        <ToggleButton
-                            value="right"
-                            aria-label="right aligned"
-                            sx={{ fontWeight: "bold", color: "#17191b" }}
-                        >
-                            Not Completed{" "}
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                    <Stack spacing={2}>{showDate}</Stack>
-                    <EmptyInputAlert
-                        open={openEmptyAlert}
-                        handleClose={handleCloseAlert}
-                    />
-                    <ExistingNoteAlert
-                        open={openExistingAlert}
-                        handleClose={handleCloseExisingAlert}
-                    />
-                </Box>
-            </Container>
+                                <Grid size={8}>
+                                    <TextField
+                                        sx={{
+                                            width: "100% !important",
+                                            height: "100%",
+                                        }}
+                                        id="filled-basic"
+                                        label="Add Your ToDo"
+                                        variant="filled"
+                                        value={toDoInput}
+                                        onChange={handleToDoInput}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                handleAddClick();
+                                            }
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid
+                                    size={4}
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Button
+                                        variant="contained"
+                                        sx={{
+                                            width: "100% !important",
+                                            height: "100%",
+                                        }}
+                                        onClick={handleAddClick}
+                                    >
+                                        Add Task
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                            <ToggleButtonGroup
+                                // value={alignment}
+                                exclusive
+                                // onChange={handleAlignment}
+                                aria-label="text alignment"
+                                sx={{ marginBottom: "20px" }}
+                            >
+                                <ToggleButton
+                                    value="left"
+                                    aria-label="left aligned"
+                                    sx={{
+                                        fontWeight: "bold",
+                                        color: "#17191b",
+                                    }}
+                                >
+                                    All
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="center"
+                                    aria-label="centered"
+                                    sx={{
+                                        fontWeight: "bold",
+                                        color: "#17191b",
+                                    }}
+                                >
+                                    Completed
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="right"
+                                    aria-label="right aligned"
+                                    sx={{
+                                        fontWeight: "bold",
+                                        color: "#17191b",
+                                    }}
+                                >
+                                    Not Completed{" "}
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                            <Stack spacing={2}>{showDate}</Stack>
+
+                            {/* --------------------------------------------------------- */}
+                            <EmptyInputAlert
+                                open={openEmptyAlert}
+                                handleClose={handleCloseAlert}
+                            />
+                            <ExistingNoteAlert
+                                open={openExistingAlert}
+                                handleClose={handleCloseExisingAlert}
+                            />
+                        </Box>
+                    </Container>
+                </UpdateContext.Provider>
+            </DeleteContext.Provider>
         </div>
     );
 }
