@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 const colors = [
+    { name: "primary", value: "#1976d2" },
     { name: "blueGrey", value: "#78909c" },
     { name: "deepOrange", value: "#ff7043" },
     { name: "green", value: "#66bb6a" },

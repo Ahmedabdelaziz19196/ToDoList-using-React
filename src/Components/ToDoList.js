@@ -67,7 +67,8 @@ export default function ToDoList() {
         setTheDate(savedData);
         let todosStatue = JSON.parse(localStorage.getItem("todosStatue")) ?? [];
         SetFilterTheTodos(todosStatue);
-        let theTheme = JSON.parse(localStorage.getItem("the theme")) ?? [];
+        let theTheme =
+            JSON.parse(localStorage.getItem("the theme")) ?? "#1976d2";
         setTheTheme(theTheme);
     }, []);
     /*get data from local storage*/
