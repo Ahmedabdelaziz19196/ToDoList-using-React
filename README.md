@@ -39,7 +39,7 @@ A simple and elegant ToDo List application built with **React**, providing users
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Ahmedabdelaziz19196/ToDoList-using-React
+   git clone https://github.com/Ahmedabdelaziz19196/ToDoList-using-React.git
    ```
 
 2. **Navigate to the project directory:**
